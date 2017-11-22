@@ -1,49 +1,86 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    {% for post in post_list %}
-        <article class="post post-{{ post.pk }}">
-            <header class="entry-header">
-                <h1 class="entry-title">
-                    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                </h1>
-                <div class="entry-meta">
-                    <span class="post-category"><a href="#">{{ post.category }}</a></span>
-                    <span class="post-date"><a href="#"><time class="entry-date"
-                                                              datetime="2012-11-09T23:15:57+00:00">2017年5月11日</time></a></span>
-                    <span class="post-author"><a href="#">{{ post.author }}</a></span>
-                    <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
-                    <span class="views-count"><a href="{{ post.get_absolute_url }}">{{ post.views }} 阅读</a></span>
-                </div>
-            </header>
-            <div class="entry-content clearfix">
-                <p>{{ post.body|striptags|truncatewords_html:50 }}</p>
-                <div class="read-more cl-effect-14">
-                    <a href="{{ post.get_absolute_url }}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
-                </div>
-            </div>
-        </article>
-    {% empty %}
-        <div class="no-post">no article now!</div>
-    {% endfor %}
-    <!-- 简单分页效果
-    <div class="pagination-simple">
-        <a href="#">上一页</a>
-        <span class="current">第 6 页 / 共 11 页</span>
-        <a href="#">下一页</a>
+{% if error_msg %}
+<p>{{ error_msg }}</p>
+{% endif %}
+
+{% for post in post_list %}
+<article class="post post-{{ post.pk }}">
+    <header class="entry-header">
+        <h1 class="entry-title">
+            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+        </h1>
+        <div class="entry-meta">
+            <span class="post-category"><a href="#">{{ post.category }}</a></span>
+            <span class="post-date"><a href="#"><time class="entry-date"
+                                                      datetime="2012-11-09T23:15:57+00:00">2017年5月11日</time></a></span>
+            <span class="post-author"><a href="#">{{ post.author }}</a></span>
+            <span class="comments-link"><a href="#">{{ post.comment_set.count }} 评论</a></span>
+            <span class="views-count"><a href="{{ post.get_absolute_url }}">{{ post.views }} 阅读</a></span>
+        </div>
+    </header>
+    <div class="entry-content clearfix">
+        <!-- one direct method
+        <p>{{ post.body|striptags|truncatewords_html:50 }}</p>
+        -->
+        <p>{{ post.excerpt }}</p>
+        <div class="read-more cl-effect-14">
+            <a href="{{ post.get_absolute_url }}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
+        </div>
     </div>
-    -->
-    <div class="pagination">
-        <ul>
-            <li><a href="">1</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">4</a></li>
-            <li><a href="">5</a></li>
-            <li class="current"><a href="">6</a></li>
-            <li><a href="">7</a></li>
-            <li><a href="">8</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">11</a></li>
-        </ul>
-    </div>
+</article>
+{% empty %}
+<div class="no-post">no article now!</div>
+{% endfor %}
+
+<!-- simple one
+{% if is_paginated %}
+<div class="pagination-simple" align="center">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+    {% endif %}
+    <span class="current">第 {{ page_obj.number }} 页 / 共 {{ paginator.num_pages }} 页</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+    {% endif %}
+</div>
+{% endif %}
+-->
+{% if is_paginated %}
+<div class="pagination" align="center">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">«</a></li>
+        {% endif %}
+        {% if first %}
+        <li><a href="?page=1">1</a></li>
+        {% endif %}
+        {% if left %}
+        {% if left_has_more %}
+        <li>...</li>
+        {% endif %}
+        {% for p in left %}
+        <li><a href="?page={{ p }}">{{ p }}</a></li>
+        {% endfor %}
+        {% endif %}
+        <li class="current"><a href="?page={{ page_obj.number }}" class="active">{{ page_obj.number }}</a></li>
+        {% if right %}
+        {% if right_has_more %}
+        <li>...</li>
+        {% endif %}
+        {% for p in right %}
+        <li><a href="?page={{ p }}">{{ p }}</a></li>
+        {% endfor %}
+        {% endif %}
+        {% if last %}
+        <li><a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a></li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">»</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
 {% endblock main %}
