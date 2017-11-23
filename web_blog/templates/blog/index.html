@@ -48,10 +48,12 @@
 {% endif %}
 -->
 {% if is_paginated %}
-<div class="pagination" align="center">
-    <ul class="pagination">
+<div class="pagination">
+    <ul class="pagination self_center">
         {% if page_obj.has_previous %}
         <li><a href="?page={{ page_obj.previous_page_number }}">«</a></li>
+        {% else %}
+        <li><a href="#">«</a></li>
         {% endif %}
         {% if first %}
         <li><a href="?page=1">1</a></li>
@@ -78,6 +80,8 @@
         {% endif %}
         {% if page_obj.has_next %}
         <li><a href="?page={{ page_obj.next_page_number }}">»</a></li>
+        {% else %}
+        <li><a href="#">»</a></li>
         {% endif %}
     </ul>
 </div>

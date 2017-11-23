@@ -1,8 +1,12 @@
-.center {margin: 0 auto;
-    width: 200px;
-    background: black;
-    padding: 20px;
-    color: white;
+.about {
+  color : black;
+  font-family : KaiTi;
+  font-size : 1em;
+}
+
+.self_center {
+    position : absolute;
+    left : 34%;
 }
 
 

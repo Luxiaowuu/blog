@@ -190,3 +190,6 @@ class TagView(IndexView):
 #     post_list = Post.objects.filter(Q(title__icontains=q) | Q(body__icontains=q))
 #     return render(request, 'blog/index.html', {'post_list': post_list,
 #                                                'error_msg': error_msg})
+
+def about(request):
+    return render(request, 'blog/about.html')
